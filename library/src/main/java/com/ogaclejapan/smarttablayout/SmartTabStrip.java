@@ -40,6 +40,9 @@ class SmartTabStrip extends LinearLayout {
 
   private static final int AUTO_WIDTH = -1;
 
+  private static final int INDICATOR_FILL = 0;
+  private static final int INDICATOR_STROKE = 1;
+
   private static final int DEFAULT_TOP_BORDER_THICKNESS_DIPS = 0;
   private static final byte DEFAULT_TOP_BORDER_COLOR_ALPHA = 0x26;
   private static final int DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS = 2;
@@ -53,6 +56,7 @@ class SmartTabStrip extends LinearLayout {
   private static final boolean DEFAULT_INDICATOR_IN_CENTER = false;
   private static final boolean DEFAULT_INDICATOR_IN_FRONT = false;
   private static final boolean DEFAULT_INDICATOR_WITHOUT_PADDING = false;
+  private static final int DEFAULT_INDICATOR_STYLE = INDICATOR_FILL;
   private static final int DEFAULT_INDICATOR_GRAVITY = GRAVITY_BOTTOM;
   private static final boolean DEFAULT_DRAW_DECORATION_AFTER_TAB = false;
 
@@ -68,6 +72,7 @@ class SmartTabStrip extends LinearLayout {
   private final int indicatorThickness;
   private final int indicatorWidth;
   private final int indicatorGravity;
+  private final int indicatorStyle;
   private final float indicatorCornerRadius;
   private final Paint indicatorPaint;
   private final int dividerThickness;
@@ -101,6 +106,7 @@ class SmartTabStrip extends LinearLayout {
     int indicatorColorsId = NO_ID;
     int indicatorThickness = (int) (SELECTED_INDICATOR_THICKNESS_DIPS * density);
     int indicatorWidth = AUTO_WIDTH;
+    int indicatorStyle = DEFAULT_INDICATOR_STYLE;
     float indicatorCornerRadius = DEFAULT_INDICATOR_CORNER_RADIUS * density;
     int overlineColor = setColorAlpha(themeForegroundColor, DEFAULT_TOP_BORDER_COLOR_ALPHA);
     int overlineThickness = (int) (DEFAULT_TOP_BORDER_THICKNESS_DIPS * density);
@@ -148,6 +154,8 @@ class SmartTabStrip extends LinearLayout {
         R.styleable.stl_SmartTabLayout_stl_dividerThickness, dividerThickness);
     drawDecorationAfterTab = a.getBoolean(
         R.styleable.stl_SmartTabLayout_stl_drawDecorationAfterTab, drawDecorationAfterTab);
+    indicatorStyle = a.getInt(
+            R.styleable.stl_SmartTabLayout_stl_indicatorStyle, indicatorStyle);
     a.recycle();
 
     final int[] indicatorColors = (indicatorColorsId == NO_ID)
@@ -183,6 +191,7 @@ class SmartTabStrip extends LinearLayout {
     this.dividerThickness = dividerThickness;
 
     this.drawDecorationAfterTab = drawDecorationAfterTab;
+    this.indicatorStyle = indicatorStyle;
 
     this.indicationInterpolator = SmartTabIndicationInterpolator.of(indicationInterpolatorId);
   }
@@ -389,6 +398,13 @@ class SmartTabStrip extends LinearLayout {
     } else {
       float padding = (Math.abs(left - right) - indicatorWidth) / 2f;
       indicatorRectF.set(left + padding, top, right - padding, bottom);
+    }
+
+    if (indicatorStyle == INDICATOR_STROKE) {
+      indicatorPaint.setStyle(Paint.Style.STROKE);
+      indicatorPaint.setStrokeWidth(3);
+    } else if (indicatorStyle == INDICATOR_FILL) {
+      indicatorPaint.setStyle(Paint.Style.FILL);
     }
 
     if (indicatorCornerRadius > 0f) {

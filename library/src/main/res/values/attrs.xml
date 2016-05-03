@@ -20,6 +20,10 @@
       <enum name="auto" value="-1"/>
     </attr>
     <attr name="stl_indicatorCornerRadius" format="dimension"/>
+    <attr name="stl_indicatorStyle" format="enum">
+      <enum name="fill" value="0"/>
+      <enum name="stroke" value="1"/>
+    </attr>
     <attr name="stl_overlineColor" format="color"/>
     <attr name="stl_overlineThickness" format="dimension"/>
     <attr name="stl_underlineColor" format="color"/>
